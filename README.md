@@ -125,6 +125,7 @@ Backend:
 
 cd server
 npm install
+
 3. Run the application
 
 Start backend:
