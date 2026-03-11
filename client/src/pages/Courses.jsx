@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import axios from "axios"
 import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
@@ -79,6 +79,88 @@ const pageStyles = `
   .course-actions { display: flex; gap: 8px; margin-top: 4px; }
   .course-actions .btn-primary { flex: 1; text-align: center; }
   .course-actions .btn-ghost   { flex: 1; }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 32px;
+  }
+  .search-icon {
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--dim); font-size: 16px; pointer-events: none;
+    display: flex; align-items: center;
+  }
+  .search-input {
+    width: 100%;
+    padding: 15px 50px 15px 50px;
+    background: rgba(7,18,32,0.85);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .search-input::placeholder { color: var(--dim); }
+  .search-input:focus {
+    border-color: rgba(56,189,248,0.45);
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.08), 0 4px 24px rgba(0,0,0,0.25);
+  }
+  .search-clear {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2);
+    color: var(--muted); border-radius: 7px; padding: 4px 10px;
+    font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, color 0.2s;
+  }
+  .search-clear:hover { background: rgba(56,189,248,0.18); color: var(--text); }
+
+  /* ── FILTER CHIPS ── */
+  .filter-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 28px; align-items: center;
+  }
+  .filter-label {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--dim); font-weight: 600;
+  }
+  .filter-chip {
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-chip:hover { border-color: var(--border-hover); color: var(--text); }
+  .filter-chip.active {
+    background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(129,140,248,0.18));
+    border-color: rgba(56,189,248,0.4);
+    color: var(--sky);
+  }
+
+  /* ── RESULTS INFO ── */
+  .results-info {
+    font-size: 13px; color: var(--dim);
+    margin-bottom: 20px;
+  }
+  .results-info strong { color: var(--sky); font-weight: 700; }
+
+  /* ── HIGHLIGHT MATCH ── */
+  .highlight { color: var(--sky); font-weight: 700; }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 72px 0;
+    color: var(--dim); gap: 14px;
+  }
+  .no-results-icon { font-size: 48px; opacity: 0.4; }
+  .no-results-text { font-size: 15px; }
+  .no-results-sub { font-size: 13px; color: var(--dim); }
 `
 
 const THUMBS = [
@@ -90,6 +172,19 @@ const THUMBS = [
   "linear-gradient(135deg,#1a2a3a,#0e1828)",
 ]
 const ICONS = ["⚛️","🐍","🎨","☁️","🔐","📱","🧠","⚙️","📊","🌐"]
+
+function highlightText(text, query) {
+  if (!query || !text) return text
+  const idx = text.toLowerCase().indexOf(query.toLowerCase())
+  if (idx === -1) return text
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="highlight">{text.slice(idx, idx + query.length)}</span>
+      {text.slice(idx + query.length)}
+    </>
+  )
+}
 
 function VideoBlock({ v, idx }) {
   const url = v.url || ""
@@ -122,18 +217,18 @@ function VideoBlock({ v, idx }) {
   )
 }
 
-function CourseCard({ course, index, saveCourse }) {
+function CourseCard({ course, index, saveCourse, searchQuery }) {
   const [showVideos, setShowVideos] = useState(false)
   const bg = THUMBS[index % THUMBS.length]
   const icon = ICONS[index % ICONS.length]
   const hasVideos = Array.isArray(course.videos) && course.videos.length > 0
 
   return (
-    <div className="course-card fade-up" style={{ animationDelay: `${index * 0.07}s` }}>
+    <div className="course-card fade-up" style={{ animationDelay: `${index * 0.05}s` }}>
       <div className="course-thumb" style={{ background: bg }}>{icon}</div>
       <div className="course-body">
-        <div className="course-title">{course.title}</div>
-        <div className="course-desc">{course.description}</div>
+        <div className="course-title">{highlightText(course.title, searchQuery)}</div>
+        <div className="course-desc">{highlightText(course.description, searchQuery)}</div>
         <div className="course-meta">
           <span className="badge badge-sky">👤 {course.instructor?.username || "Instructor"}</span>
           {hasVideos && <span className="badge badge-violet">🎬 {course.videos.length} videos</span>}
@@ -163,8 +258,18 @@ function CourseCard({ course, index, saveCourse }) {
   )
 }
 
+const SORT_OPTIONS = [
+  { key: "default", label: "Default" },
+  { key: "price-asc", label: "Price: Low → High" },
+  { key: "price-desc", label: "Price: High → Low" },
+  { key: "videos", label: "Most Videos" },
+]
+
 function Courses() {
   const [courses, setCourses] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortKey, setSortKey] = useState("default")
   const userId = localStorage.getItem("userId")
 
   useEffect(() => {
@@ -174,6 +279,8 @@ function Courses() {
         setCourses(res.data)
       } catch (err) {
         console.error("Failed to load courses:", err.response?.data || err.message)
+      } finally {
+        setLoading(false)
       }
     }
     fetchCourses()
@@ -191,29 +298,107 @@ function Courses() {
     } catch (e) { console.error("Save course failed", e) }
   }
 
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    let result = courses
+
+    if (q) {
+      result = result.filter(c =>
+        c.title?.toLowerCase().includes(q) ||
+        c.description?.toLowerCase().includes(q) ||
+        c.instructor?.username?.toLowerCase().includes(q)
+      )
+    }
+
+    if (sortKey === "price-asc")  return [...result].sort((a,b) => (a.price||0) - (b.price||0))
+    if (sortKey === "price-desc") return [...result].sort((a,b) => (b.price||0) - (a.price||0))
+    if (sortKey === "videos")     return [...result].sort((a,b) => (b.videos?.length||0) - (a.videos?.length||0))
+    return result
+  }, [courses, searchQuery, sortKey])
+
   return (
     <>
       <style>{pageStyles}</style>
       <Navbar />
       <div className="page-wrap">
         <div className="page-inner">
+
           <div className="page-header fade-up">
             <div className="page-tag">Browse</div>
             <h1 className="page-title">All <span>Courses</span></h1>
           </div>
 
-          {courses.length === 0 ? (
+          {/* Search bar */}
+          <div className="search-wrap fade-up">
+            <span className="search-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </span>
+            <input
+              className="search-input"
+              type="text"
+              placeholder="Search by title, description, or instructor…"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              autoComplete="off"
+            />
+            {searchQuery && (
+              <button className="search-clear" onClick={() => setSearchQuery("")}>✕ Clear</button>
+            )}
+          </div>
+
+          {/* Sort chips */}
+          <div className="filter-row fade-up">
+            <span className="filter-label">Sort by</span>
+            {SORT_OPTIONS.map(opt => (
+              <button
+                key={opt.key}
+                className={`filter-chip ${sortKey === opt.key ? "active" : ""}`}
+                onClick={() => setSortKey(opt.key)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Results info */}
+          {!loading && (
+            <div className="results-info fade-up">
+              {searchQuery
+                ? <>Showing <strong>{filtered.length}</strong> result{filtered.length !== 1 ? "s" : ""} for "<strong>{searchQuery}</strong>"</>
+                : <><strong>{filtered.length}</strong> course{filtered.length !== 1 ? "s" : ""} available</>
+              }
+            </div>
+          )}
+
+          {/* Content */}
+          {loading ? (
             <div className="state-screen">
               <div className="spinner" />
               <span>Loading courses…</span>
             </div>
+          ) : filtered.length === 0 ? (
+            <div className="no-results">
+              <div className="no-results-icon">🔍</div>
+              <div className="no-results-text">No courses found</div>
+              <div className="no-results-sub">Try a different keyword or clear the search</div>
+              <button className="btn-ghost" style={{marginTop:'8px'}} onClick={() => setSearchQuery("")}>Clear Search</button>
+            </div>
           ) : (
             <div className="courses-grid">
-              {courses.map((course, i) => (
-                <CourseCard key={course._id} course={course} index={i} saveCourse={saveCourse} />
+              {filtered.map((course, i) => (
+                <CourseCard
+                  key={course._id}
+                  course={course}
+                  index={i}
+                  saveCourse={saveCourse}
+                  searchQuery={searchQuery.trim()}
+                />
               ))}
             </div>
           )}
+
         </div>
       </div>
     </>
