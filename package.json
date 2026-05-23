@@ -1,0 +1,13 @@
+{
+  "name": "online-learning-platform-root",
+  "version": "1.0.0",
+  "description": "AWS Elastic Beanstalk Root Orchestrator for Learn-Hub Monorepo",
+  "main": "server/server.js",
+  "scripts": {
+    "postinstall": "cd server && npm install",
+    "start": "cd server && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
