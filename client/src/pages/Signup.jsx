@@ -177,7 +177,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post("http://localhost:5000/api/auth/register", form)
+      await axios.post("http://51.20.64.165:5000/api/auth/register", form)
       setIsError(false)
       setMessage("Account created! Redirecting to login…")
       setTimeout(() => navigate("/login"), 2000)

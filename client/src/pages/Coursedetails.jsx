@@ -103,7 +103,7 @@ function CourseDetails() {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const res = await axios.get(`http://localhost:5000/api/courses/${id}`)
+      const res = await axios.get(`http://51.20.64.165:5000/api/courses/${id}`)
       setCourse(res.data)
     }
     fetchCourse()

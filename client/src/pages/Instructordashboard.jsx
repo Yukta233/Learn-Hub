@@ -326,13 +326,13 @@ const addQuiz = ()=>{
 const createCourse = async ()=>{
   try{
     const res = await axios.post(
-      "http://localhost:5000/api/courses/create",
+      "http://51.20.64.165:5000/api/courses/create",
       { title, description, price: Number(price) || 0, videos },
       { headers:{ Authorization:`Bearer ${token}` } }
     )
     const courseId = res.data.course._id
     await axios.post(
-      "http://localhost:5000/api/quizzes/create",
+      "http://51.20.64.165:5000/api/quizzes/create",
       { courseId, questions:quiz },
       { headers:{ Authorization:`Bearer ${token}` } }
     )
@@ -350,9 +350,9 @@ useEffect(()=>{
     try{
       if(!token) return
       const [coursesRes, quizzesRes, meRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/courses/mine", { headers:{ Authorization:`Bearer ${token}` } }),
-        axios.get("http://localhost:5000/api/quizzes/mine", { headers:{ Authorization:`Bearer ${token}` } }),
-        axios.get("http://localhost:5000/api/auth/me", { headers:{ Authorization:`Bearer ${token}` } })
+        axios.get("http://51.20.64.165:5000/api/courses/mine", { headers:{ Authorization:`Bearer ${token}` } }),
+        axios.get("http://51.20.64.165:5000/api/quizzes/mine", { headers:{ Authorization:`Bearer ${token}` } }),
+        axios.get("http://51.20.64.165:5000/api/auth/me", { headers:{ Authorization:`Bearer ${token}` } })
       ])
       setMyCourses(coursesRes.data || [])
       setMyQuizzes(quizzesRes.data || [])
@@ -529,11 +529,11 @@ return(
                   <div className="id-btn-row">
                     <button className="id-btn-save" onClick={async()=>{
                       try{
-                        await axios.put(`http://localhost:5000/api/courses/${course._id}`, {
+                        await axios.put(`http://51.20.64.165:5000/api/courses/${course._id}`, {
                           title: editCourseData.title, description: editCourseData.description,
                           price: Number(editCourseData.price)||0, videos: editCourseData.videos
                         }, { headers:{ Authorization:`Bearer ${token}` } })
-                        const refreshed = await axios.get("http://localhost:5000/api/courses/mine", { headers:{ Authorization:`Bearer ${token}` } })
+                        const refreshed = await axios.get("http://51.20.64.165:5000/api/courses/mine", { headers:{ Authorization:`Bearer ${token}` } })
                         setMyCourses(refreshed.data || [])
                         setEditingCourseId(null)
                       }catch(err){ console.error("Update course failed", err.response?.data || err.message) }
@@ -555,7 +555,7 @@ return(
                       <button className="id-btn-edit" onClick={()=>{ setEditingCourseId(course._id); setEditCourseData({ title:course.title, description:course.description, price:course.price, videos:course.videos||[] }) }}>Edit</button>
                       <button className="id-btn-danger" onClick={async()=>{
                         try{
-                          await axios.delete(`http://localhost:5000/api/courses/${course._id}`, { headers:{ Authorization:`Bearer ${token}` } })
+                          await axios.delete(`http://51.20.64.165:5000/api/courses/${course._id}`, { headers:{ Authorization:`Bearer ${token}` } })
                           setMyCourses(myCourses.filter(c=>c._id!==course._id))
                         }catch(err){ console.error("Delete course failed", err.response?.data || err.message) }
                       }}>Delete</button>
@@ -596,8 +596,8 @@ return(
                     <>
                       <button className="id-btn-save" onClick={async()=>{
                         try{
-                          await axios.put(`http://localhost:5000/api/quizzes/${q._id}`, { questions: editQuizQuestions }, { headers:{ Authorization:`Bearer ${token}` } })
-                          const refreshed = await axios.get("http://localhost:5000/api/quizzes/mine", { headers:{ Authorization:`Bearer ${token}` } })
+                          await axios.put(`http://51.20.64.165:5000/api/quizzes/${q._id}`, { questions: editQuizQuestions }, { headers:{ Authorization:`Bearer ${token}` } })
+                          const refreshed = await axios.get("http://51.20.64.165:5000/api/quizzes/mine", { headers:{ Authorization:`Bearer ${token}` } })
                           setMyQuizzes(refreshed.data || [])
                           setEditingQuizId(null); setEditQuizQuestions([])
                         }catch(err){ console.error("Update quiz failed", err.response?.data || err.message) }
@@ -609,7 +609,7 @@ return(
                       <button className="id-btn-edit" onClick={()=>{ setEditingQuizId(q._id); setEditQuizQuestions(q.questions ? q.questions.map(qq=>({...qq})) : []) }}>Edit</button>
                       <button className="id-btn-danger" onClick={async()=>{
                         try{
-                          await axios.delete(`http://localhost:5000/api/quizzes/${q._id}`, { headers:{ Authorization:`Bearer ${token}` } })
+                          await axios.delete(`http://51.20.64.165:5000/api/quizzes/${q._id}`, { headers:{ Authorization:`Bearer ${token}` } })
                           setMyQuizzes(myQuizzes.filter(x=>x._id!==q._id))
                         }catch(err){ console.error("Delete quiz failed", err.response?.data || err.message) }
                       }}>Delete</button>
@@ -705,7 +705,7 @@ return(
                 <div className="id-btn-row">
                   <button className="id-btn-primary" onClick={async()=>{
                     try{
-                      await axios.put('http://localhost:5000/api/auth/me', {
+                      await axios.put('http://51.20.64.165:5000/api/auth/me', {
                         username: profile.username, phone: profile.phone, avatarFile: avatarFile || null
                       }, { headers:{ Authorization:`Bearer ${token}` } })
                       setEditingProfile(false)

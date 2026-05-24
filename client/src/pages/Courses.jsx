@@ -275,7 +275,7 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/courses")
+        const res = await axios.get("http://51.20.64.165:5000/api/courses")
         setCourses(res.data)
       } catch (err) {
         console.error("Failed to load courses:", err.response?.data || err.message)

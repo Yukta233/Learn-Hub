@@ -261,7 +261,7 @@ function StudentDashboard(){
     const load = async()=>{
       try{
         if(token){
-          const meRes = await axios.get("http://localhost:5000/api/auth/me", { headers:{ Authorization:`Bearer ${token}` } })
+          const meRes = await axios.get("http://51.20.64.165:5000/api/auth/me", { headers:{ Authorization:`Bearer ${token}` } })
           setProfile({
             username: meRes.data?.username || '',
             email: meRes.data?.email || '',
@@ -374,7 +374,7 @@ function StudentDashboard(){
                     </div>
                     <button className="sd-btn-primary" onClick={async()=>{
                       try{
-                        await axios.put('http://localhost:5000/api/auth/me', {
+                        await axios.put('http://51.20.64.165:5000/api/auth/me', {
                           username: profile.username, phone: profile.phone, avatarFile: avatarFile || null
                         }, { headers:{ Authorization:`Bearer ${token}` } })
                         setEditingProfile(false)

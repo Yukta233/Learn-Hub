@@ -85,10 +85,10 @@ function QuizzesPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const coursesRes = await axios.get('http://localhost:5000/api/courses')
+        const coursesRes = await axios.get('http://51.20.64.165:5000/api/courses')
         const courses = coursesRes.data || []
         const quizPromises = courses.map(c =>
-          axios.get(`http://localhost:5000/api/quizzes/${c._id}`,
+          axios.get(`http://51.20.64.165:5000/api/quizzes/${c._id}`,
             token ? { headers: { Authorization: `Bearer ${token}` } } : {}
           ).then(r => ({ course: c, quiz: r.data })).catch(() => ({ course: c, quiz: null }))
         )

@@ -140,7 +140,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password })
+      const res = await axios.post("http://51.20.64.165:5000/api/auth/login", { email, password })
       localStorage.setItem("token", res.data.token)
       localStorage.setItem("username", res.data.user?.username || "")
       localStorage.setItem("role", res.data.user?.role || "")
