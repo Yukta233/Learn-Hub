@@ -1,100 +1,91 @@
-Online Learning Platform
-Overview
+# 📚 Online Learning Platform (Full Stack - AWS Deployed)
 
-This project is a full-stack online learning platform where users can browse courses, watch learning videos, take quizzes, and track their learning progress through an analytics dashboard.
+A full-stack online learning management system (LMS) where users can browse courses, watch learning videos, attempt quizzes, and track their learning progress through a real-time analytics dashboard.
 
-The platform is designed to simulate the core features of modern e-learning systems such as Coursera or Udemy, including course progress tracking, quiz attempt history, and visual analytics for learning performance.
+The platform simulates core features of modern e-learning systems like Coursera and Udemy, with full production deployment using AWS and MongoDB Atlas.
 
-Features
-User Features
+---
 
-Browse and enroll in courses
+# 🚀 Live Architecture
 
-Watch course videos
+Frontend (React + Vite) → AWS S3 (Hosting)  
+Backend (Node.js + Express) → AWS EC2 (PM2 Managed Server)  
+Database → MongoDB Atlas (Cloud Database)
 
-Track completed videos
+---
 
-Take quizzes related to courses
+# ✨ Features
 
-View quiz attempt history
+## 👤 User Features
+- Browse and enroll in courses  
+- Watch course video lectures  
+- Track completed videos  
+- Attempt quizzes for each course  
+- View quiz history with timestamps  
+- Monitor learning progress in real time  
 
-Monitor learning progress with analytics dashboard
+---
 
-Progress Dashboard
+## 📊 Progress Dashboard
+The analytics dashboard includes:
 
-The Progress Page provides detailed analytics about the user’s learning activity, including:
+- Total courses enrolled  
+- Total quiz attempts  
+- Total videos completed  
+- Quiz attempts per course  
+- Video completion per course  
+- Progress bars for completion tracking  
+- Latest quiz score display  
+- Full quiz attempt history  
 
-Total courses tracked
+---
 
-Total quiz attempts
+## 📈 Analytics & Visualizations
+- SVG-based bar charts for quiz attempts  
+- Video completion charts per course  
+- Progress bars for learning tracking  
+- Mini score visualization  
+- Course-wise performance analytics  
 
-Total videos completed
+---
 
-Quiz attempts per course visualization
+# 🛠 Tech Stack
 
-Videos completed per course visualization
+## Frontend
+- React (Vite)
+- JavaScript (ES6+)
+- CSS3
+- Axios
+- Custom SVG Charts
 
-Video completion progress bars
+## Backend
+- Node.js
+- Express.js
+- JWT Authentication
+- REST APIs
 
-Latest quiz score display
+## Database
+- MongoDB Atlas (Cloud Database)
 
-Quiz attempt history with timestamps
+## Deployment (AWS)
+- AWS S3 → Frontend Hosting  
+- AWS EC2 → Backend Hosting  
+- PM2 → Process Manager (24/7 uptime)  
+- AWS Security Groups → Port management  
 
-Analytics & Visualizations
+---
 
-The platform includes custom-built visual components such as:
-
-Bar charts for quiz attempts
-
-Bar charts for video completion
-
-Mini attempt score charts
-
-Video completion progress bars
-
-Per-course learning statistics
-
-Tech Stack
-Frontend
-
-React
-
-Vite
-
-JavaScript
-
-CSS
-
-SVG-based custom charts
-
-Backend
-
-Node.js
-
-Express.js
-
-Database
-
-MongoDB
-
-API Communication
-
-Axios for API requests
-
-Project Structure
+# 📁 Project Structure
 client/
 │
 ├── src/
-│   ├── components/
-│   │   └── Navbar.jsx
-│   │
-│   ├── pages/
-│   │   └── Progress.jsx
-│   │
-│   ├── services/
-│   │   └── api.js
-│   │
-│   └── main.jsx
+│ ├── components/
+│ │ └── Navbar.jsx
+│ ├── pages/
+│ │ └── Progress.jsx
+│ ├── services/
+│ │ └── api.js
+│ └── main.jsx
 │
 server/
 │
@@ -105,37 +96,155 @@ server/
 ├── config/
 └── server.js
 
-Create a .env file inside the server folder:
+# 🔐 Environment Variables
+
+Create a `.env` file inside the `server/` folder:
+
 
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
+MONGO_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_secret_key
 
-Installation
-1. Clone the repository
+
+---
+
+# ⚙️ Installation & Setup
+
+## 1. Clone Repository
+
 git clone https://github.com/yourusername/online-learning-platform.git
-2. Install dependencies
+cd online-learning-platform
+
+
+## 2. Install Dependencies
 
 Frontend:
 
 cd client
 npm install
 
+
 Backend:
 
 cd server
 npm install
 
-3. Run the application
 
-Start backend:
+---
 
+# 🧪 Run Locally
+
+## Start Backend
+
+cd server
 npm start
 
-Start frontend:
 
+## Start Frontend
+
+cd client
 npm run dev
 
-The application will run at:
+
+Frontend runs at:
 
 http://localhost:5173
+
+
+---
+
+# 🌐 Production Deployment (AWS)
+
+## 🚀 Frontend (S3)
+1. Build project:
+
+npm run build
+
+
+2. Upload `dist/` or `build/` folder to AWS S3  
+3. Enable static website hosting  
+4. (Optional) Attach CloudFront CDN  
+
+---
+
+## 🚀 Backend (EC2 + PM2)
+
+SSH into EC2:
+
+ssh -i backend-key.pem ubuntu@YOUR_EC2_IP
+
+
+Install dependencies:
+
+cd server
+npm install
+
+
+Start backend using PM2:
+
+pm2 start server.js --name backend
+pm2 save
+pm2 startup
+
+
+Open AWS Security Group:
+- Port: 5000
+- Source: 0.0.0.0/0
+
+Backend runs at:
+
+http://YOUR_EC2_IP:5000
+
+
+---
+
+## 🗄 Database (MongoDB Atlas)
+
+- Create free M0 cluster  
+- Create database user  
+- Whitelist EC2 IP or allow `0.0.0.0/0`  
+- Paste connection string in `.env`  
+
+---
+
+# 🔗 API Base URL
+
+
+http://YOUR_EC2_IP:5000
+
+
+Update frontend API:
+
+http://localhost:5000 → http://EC2_IP:5000
+
+
+---
+
+# 🧠 Key Learnings
+
+- Full-stack MERN-style architecture  
+- AWS S3 + EC2 deployment  
+- MongoDB Atlas integration  
+- PM2 process management  
+- REST API development  
+- Production-level deployment workflow  
+
+---
+
+# 📌 Future Improvements
+
+- Real-time notifications using WebSockets  
+- AI-based course recommendations  
+- Payment gateway integration  
+- Admin dashboard  
+- Video streaming optimization  
+
+---
+
+# 👨‍💻 Author
+
+Built as a full-stack project to demonstrate:
+- Cloud deployment skills  
+- Backend API development  
+- Frontend UI/UX design  
+- Scalable system architecture  
