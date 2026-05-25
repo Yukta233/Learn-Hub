@@ -3,6 +3,7 @@ import axios from "axios"
 import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import { THEME } from "./theme"
+import { API_BASE_URL } from "../services/api"
 
 const pageStyles = `
   ${THEME}
@@ -275,7 +276,7 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://51.20.64.165:5000/api/courses")
+        const res = await axios.get(`${API_BASE_URL}/api/courses`)
         setCourses(res.data)
       } catch (err) {
         console.error("Failed to load courses:", err.response?.data || err.message)

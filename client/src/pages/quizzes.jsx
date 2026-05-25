@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Navbar from '../components/Navbar'
-import { recordQuizAttempt } from '../services/api'
+import { recordQuizAttempt, API_BASE_URL } from '../services/api'
 import { THEME } from './theme'
 
 const pageStyles = `
@@ -85,10 +85,10 @@ function QuizzesPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const coursesRes = await axios.get('http://51.20.64.165:5000/api/courses')
+        const coursesRes = await axios.get(`${API_BASE_URL}/api/courses`)
         const courses = coursesRes.data || []
         const quizPromises = courses.map(c =>
-          axios.get(`http://51.20.64.165:5000/api/quizzes/${c._id}`,
+          axios.get(`${API_BASE_URL}/api/quizzes/${c._id}`,
             token ? { headers: { Authorization: `Bearer ${token}` } } : {}
           ).then(r => ({ course: c, quiz: r.data })).catch(() => ({ course: c, quiz: null }))
         )

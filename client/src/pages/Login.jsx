@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar"
+import { API_BASE_URL } from "../services/api"
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
@@ -140,7 +141,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("http://51.20.64.165:5000/api/auth/login", { email, password })
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
       localStorage.setItem("token", res.data.token)
       localStorage.setItem("username", res.data.user?.username || "")
       localStorage.setItem("role", res.data.user?.role || "")
@@ -156,7 +157,8 @@ function Login() {
       }, 1000)
     } catch (err) {
       setIsError(true)
-      setMessage("Invalid email or password")
+      const errMsg = err.response?.data?.message || err.message || "Invalid email or password"
+      setMessage(errMsg)
     }
   }
 

@@ -474,9 +474,9 @@ function Home() {
         <div className="cta-banner fade-in-section">
           <h2 className="cta-title">Start learning for free today</h2>
           <p className="cta-sub">Join 120,000+ learners already building their future on our platform.</p>
-          <button className="btn-primary" style={{ fontSize: "16px", padding: "15px 40px" }}>
+          <Link to="/signup" className="btn-primary" style={{ fontSize: "16px", padding: "15px 40px", textDecoration: "none" }}>
             Get Started — It's Free
-          </button>
+          </Link>
         </div>
 
         {/* ── FOOTER STRIP ── */}

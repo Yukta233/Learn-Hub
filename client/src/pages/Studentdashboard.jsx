@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import Navbar from "../components/Navbar"
-import { getMyProgress } from "../services/api"
+import { getMyProgress, API_BASE_URL } from "../services/api"
 
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
@@ -261,7 +261,7 @@ function StudentDashboard(){
     const load = async()=>{
       try{
         if(token){
-          const meRes = await axios.get("http://51.20.64.165:5000/api/auth/me", { headers:{ Authorization:`Bearer ${token}` } })
+          const meRes = await axios.get(`${API_BASE_URL}/api/auth/me`, { headers:{ Authorization:`Bearer ${token}` } })
           setProfile({
             username: meRes.data?.username || '',
             email: meRes.data?.email || '',
@@ -340,7 +340,7 @@ function StudentDashboard(){
                 <div className="sd-profile-row">
                   <img
                     src={profile.avatarUrl
-                      ? (profile.avatarUrl.startsWith('http') ? profile.avatarUrl : `http://localhost:5000${profile.avatarUrl}`)
+                      ? (profile.avatarUrl.startsWith('http') ? profile.avatarUrl : `${API_BASE_URL}${profile.avatarUrl}`)
                       : 'https://via.placeholder.com/80'}
                     alt="avatar"
                     className="sd-profile-avatar"
@@ -374,7 +374,7 @@ function StudentDashboard(){
                     </div>
                     <button className="sd-btn-primary" onClick={async()=>{
                       try{
-                        await axios.put('http://51.20.64.165:5000/api/auth/me', {
+                        await axios.put(`${API_BASE_URL}/api/auth/me`, {
                           username: profile.username, phone: profile.phone, avatarFile: avatarFile || null
                         }, { headers:{ Authorization:`Bearer ${token}` } })
                         setEditingProfile(false)

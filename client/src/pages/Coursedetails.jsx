@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import Navbar from "../components/Navbar"
-import { markVideoComplete } from "../services/api"
+import { markVideoComplete, API_BASE_URL } from "../services/api"
 import { THEME } from "./theme"
 
 const pageStyles = `
@@ -103,7 +103,7 @@ function CourseDetails() {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const res = await axios.get(`http://51.20.64.165:5000/api/courses/${id}`)
+      const res = await axios.get(`${API_BASE_URL}/api/courses/${id}`)
       setCourse(res.data)
     }
     fetchCourse()

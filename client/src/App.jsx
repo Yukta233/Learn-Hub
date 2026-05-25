@@ -1,4 +1,4 @@
-import {BrowserRouter,Routes,Route, Navigate} from "react-router-dom"
+import {BrowserRouter,Routes,Route} from "react-router-dom"
 
 import Home from "./pages/Home"
 import Login from "./pages/Login"
@@ -10,6 +10,7 @@ import InstructorDashboard from "./pages/Instructordashboard"
 import Quizzes from "./pages/quizzes"
 import StudentDashboard from "./pages/Studentdashboard"
 import Progress from "./pages/progress"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App(){
 
@@ -28,21 +29,17 @@ return(
 <Route
   path="/instructor-dashboard"
   element={
-    localStorage.getItem("token") && localStorage.getItem('role') === 'instructor' ? (
+    <ProtectedRoute allowedRole="instructor">
       <InstructorDashboard/>
-    ) : (
-      <Navigate to="/login" replace />
-    )
+    </ProtectedRoute>
   }
 />
 <Route
   path="/student-dashboard"
   element={
-    localStorage.getItem("token") && localStorage.getItem('role') === 'student' ? (
+    <ProtectedRoute allowedRole="student">
       <StudentDashboard/>
-    ) : (
-      <Navigate to="/login" replace />
-    )
+    </ProtectedRoute>
   }
 />
 
@@ -51,11 +48,9 @@ return(
 <Route
   path="/progress"
   element={
-    localStorage.getItem("token") && localStorage.getItem('role') === 'student' ? (
+    <ProtectedRoute allowedRole="student">
       <Progress/>
-    ) : (
-      <Navigate to="/login" replace />
-    )
+    </ProtectedRoute>
   }
 />
 

@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar"
+import { API_BASE_URL } from "../services/api"
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
@@ -177,7 +178,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post("http://51.20.64.165:5000/api/auth/register", form)
+      await axios.post(`${API_BASE_URL}/api/auth/register`, form)
       setIsError(false)
       setMessage("Account created! Redirecting to login…")
       setTimeout(() => navigate("/login"), 2000)
